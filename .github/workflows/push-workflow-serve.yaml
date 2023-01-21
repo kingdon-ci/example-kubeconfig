@@ -6,8 +6,8 @@ env:
 
 on:
   push:
-    paths: [ Dockerfile, _scripts/flux-pull.sh ]
-    branches: [ main ] # Configure the branchs which you want to run this workflow
+    paths: [ Dockerfile, _scripts/flux-pull.sh, .github/workflows/push-workflow-serve.yaml ]
+    branches: [ main ]
 
 jobs:
   build-push:
@@ -48,5 +48,4 @@ jobs:
     - name: Cosign (keyless)
       run: cosign sign ${{ env.PUSH_TARGET }}@${{ steps.push_rootfs.outputs.digest }}
       env:
-        TAGS: ${{ steps.push_rootfs.outputs.digest }}
         COSIGN_EXPERIMENTAL: true

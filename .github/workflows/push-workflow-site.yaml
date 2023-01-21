@@ -7,8 +7,8 @@ env:
 
 on:
   push:
-    paths: [ src/**.md ] # Only trigger workflow when there are changes on docs
-    branches: [ main ] # Configure the branchs which you want to run this workflow
+    paths: [ src/**.md, .github/workflows/push-workflow-site.yaml ]
+    branches: [ main ]
     # tags: [ "*" ]
 
 jobs:
@@ -93,5 +93,4 @@ jobs:
     - name: Cosign (keyless)
       run: cosign sign ${{ env.PUSH_TARGET }}@${{ steps.push_html.outputs.digest }}
       env:
-        TAGS: ${{ env.PUSH_TARGET }}@${{ steps.push_html.outputs.digest }}
         COSIGN_EXPERIMENTAL: true
