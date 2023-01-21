@@ -11,6 +11,8 @@ on:
 
 jobs:
   build-push:
+    permissions:
+      id-token: write # needed for signing the images with GitHub OIDC Token **not production ready**
     name: "Build & Push docs server"
     runs-on: ubuntu-latest
 

@@ -13,10 +13,8 @@ on:
 
 jobs:
   build-push:
-    # not on GHCR anymore... save this in case we go back!
-    # permissions:
-    #   packages: write
-    #   id-token: write # needed for signing the images with GitHub OIDC Token **not production ready**
+    permissions:
+      id-token: write # needed for signing the images with GitHub OIDC Token **not production ready**
 
     name: "Build & Push docs"
     runs-on: ubuntu-latest
