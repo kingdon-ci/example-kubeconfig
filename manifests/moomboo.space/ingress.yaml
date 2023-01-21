@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: example-kubeconfig
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    cert-manager.io/cluster-issuer: production-letsencrypt
+spec:
+  ingressClassName: public
+  rules:
+  - host: howto.howard.moomboo.space
+    http:
+      paths:
+      - path: /()(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: example-kubeconfig
+            port:
+              number: 80
+  tls:
+  - hosts:
+    - howto.howard.moomboo.space
+    secretName: example-kubeconfig
