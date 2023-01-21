@@ -1,0 +1,25 @@
+*.py[cod]
+
+# Packages
+*.egg
+*.egg-info
+dist
+build
+eggs
+parts
+var
+sdist
+develop-eggs
+.installed.cfg
+lib
+lib64
+bower_components
+.sass-cache
+
+# python virtual environments for testing
+venv/
+
+_build/
+site/
+
+.DS_Store

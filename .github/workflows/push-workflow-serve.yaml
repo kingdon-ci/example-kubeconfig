@@ -1,0 +1,52 @@
+name: Build docs server
+
+env:
+  PUSH_TARGET_IMG: img.hephy.pro/examples/howto-kubeconfig
+  PUSH_TARGET_TAG: serve # Configure what tag will push
+
+on:
+  push:
+    paths: [ Dockerfile, _scripts/flux-pull.sh ]
+    branches: [ main ] # Configure the branchs which you want to run this workflow
+
+jobs:
+  build-push:
+    name: "Build & Push docs server"
+    runs-on: ubuntu-latest
+
+    steps:
+
+    # Checkout source code
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    # Use Cosign to sign and verify site content as OCI
+    - name: Install Cosign
+      uses: sigstore/cosign-installer@main
+
+    - name: Login to Hephy Harbor
+      uses: docker/login-action@v2
+      with:
+        registry: img.hephy.pro
+        username: ${{ secrets.HARBOR_BOT_PUSH_USER }}
+        password: ${{ secrets.HARBOR_BOT_PASSWORD }}
+
+    # Make server with latest published artifact
+    - name: Docker build and push
+      id: push_rootfs
+      run: |
+        SITE=${PUSH_TARGET_IMG}:${PUSH_TARGET_TAG}
+        docker build -t ${SITE} .
+        docker push ${SITE} | tee tmp-digest.out
+        cat tmp-digest.out
+        DIGEST="$(grep 'serve: digest: sha256:' tmp-digest.out | awk '{print $3}')"
+        echo DIGEST=$DIGEST
+
+        echo "digest=$(grep 'serve: digest: sha256:' tmp-digest.out | awk '{print $3}')" >> $GITHUB_OUTPUT
+
+    # Sign the docs tag with cosign (keyless/experimental)
+    - name: Cosign (keyless)
+      run: cosign sign ${{ steps.push_rootfs.outputs.digest }}
+      env:
+        TAGS: ${{ steps.push_rootfs.outputs.digest }}
+        COSIGN_EXPERIMENTAL: true

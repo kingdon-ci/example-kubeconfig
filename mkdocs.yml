@@ -1,0 +1,28 @@
+#
+# NOTE: titles need to be capitalized here to work around MkDocs automatically downcasing title
+# names
+#
+site_name: Example Kubeconfig for int128/kubelogin
+site_url: https://howto.howard.moomboo.space
+nav:
+  - Home: index.md
+  - Changelogs:
+    - v2.0.0: changelogs/v2.0.0.md
+theme:
+  name: null
+  custom_dir: 'themes/deis'
+docs_dir: src
+markdown_extensions:
+  - markdown_checklist.extension
+  - markdown_include.include:
+      base_path: src/_includes
+  - admonition
+  - codehilite
+  - toc:
+      permalink: True
+extra_javascript:
+  - static/js/foundation.js
+  - static/js/foundation.dropdown.js
+  - static/js/foundation.offcanvas.js
+  - static/js/headroom.min.js
+  - static/js/adjustments.js
