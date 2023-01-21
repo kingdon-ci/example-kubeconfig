@@ -11,6 +11,8 @@ on:
 
 jobs:
   build-push:
+    permissions:
+      id-token: write # needed for signing the images with GitHub OIDC Token **not production ready**
     name: "Build & Push docs server"
     runs-on: ubuntu-latest
 
@@ -46,6 +48,6 @@ jobs:
 
     # Sign the docs tag with cosign (keyless/experimental)
     - name: Cosign (keyless)
-      run: cosign sign ${{ env.PUSH_TARGET }}@${{ steps.push_rootfs.outputs.digest }}
+      run: cosign sign ${{ env.PUSH_TARGET_IMG }}@${{ steps.push_rootfs.outputs.digest }}
       env:
         COSIGN_EXPERIMENTAL: true
