@@ -93,5 +93,5 @@ jobs:
     - name: Cosign (keyless)
       run: cosign sign ${{ steps.push_html.outputs.digest }}
       env:
-        TAGS: ${{ steps.push_html.outputs.digest }}
+        TAGS: ${{ env.PUSH_TARGET }}@${{ steps.push_html.outputs.digest }}
         COSIGN_EXPERIMENTAL: true
