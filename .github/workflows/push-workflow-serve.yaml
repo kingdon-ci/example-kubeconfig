@@ -46,7 +46,7 @@ jobs:
 
     # Sign the docs tag with cosign (keyless/experimental)
     - name: Cosign (keyless)
-      run: cosign sign ${{ steps.push_rootfs.outputs.digest }}
+      run: cosign sign ${{ env.PUSH_TARGET }}@${{ steps.push_rootfs.outputs.digest }}
       env:
         TAGS: ${{ steps.push_rootfs.outputs.digest }}
         COSIGN_EXPERIMENTAL: true
