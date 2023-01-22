@@ -29,7 +29,8 @@ kubectl krew install oidc-login
 choco install kubelogin
 ```
 
-Visit [int128/kubelogin](https://github.com/int128/kubelogin#setup) for more information. You need `kubelogin` so you can login to Kube.
+Visit [int128/kubelogin](https://github.com/int128/kubelogin#setup) for more information.
+You need `kubelogin` so you can login to Kube. (No duh!)
 
 ## Kubeconfig
 
@@ -127,16 +128,19 @@ users:
             name: oidc
 ```
 
-In the example kubeconfig above, several details are significant.
+In the example kubeconfig above, some of the details are significant.
 
-* The name `oidc` is significant but the name `kubelogin` is not, and can be changed to
-whatever you want.
+* The `auth-provider` string `name: oidc` is significant for kubelogin here;
+  `kubelogin` is not, and so the user name can be changed or left as-is.
 
 * The `client-id` and `client-secret` are also significant as with the
-  `idp-issuer-url`,
+  `idp-issuer-url`, (your own OIDC-based identity need not be mentioned)
 
 * and each cluster gets a `certificate-authority-data` that also must match the
   cluster's own certificate authority data.
+
+This `certificate-authority-data` would not usually change very often, except
+perhaps for certificate renewals or clusters that are likely to come and go.
 
 #### GitHub Groups
 
@@ -148,7 +152,7 @@ We can still use it though, since we have adopted groups as our main source of
 authority in the example org; there are basically no surprises as there is no
 individual in our RBAC config, only groups in the format: `kingdon-ci:group`.
 
-### Run `kubelogin`
+### tl;dr: Run `kubelogin`
 
 The Kubeconfig is set up for what's called in the `kubelogin` documentation as
 [**Standalone Mode**](https://github.com/int128/kubelogin/blob/master/docs/standalone-mode.md).
