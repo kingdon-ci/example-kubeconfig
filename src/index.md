@@ -148,10 +148,39 @@ We can still use it though, since we have adopted groups as our main source of
 authority in the example org; there are basically no surprises as there is no
 individual in our RBAC config, only groups in the format: `kingdon-ci:group`.
 
+### Run `kubelogin`
+
+The Kubeconfig is set up for what's called in the `kubelogin` documentation as
+[**Standalone Mode**](https://github.com/int128/kubelogin/blob/master/docs/standalone-mode.md).
+
+The tl;dr is: just run `kubelogin`.
+
+When your access expires, in probably about 24 hours, you will see an error:
+`Unauthorized` or similar from `kubectl`. Just run `kubelogin` again;
+
+This method avoids using any exec plugin at runtime, as the `id-token` gets
+embedded directly in your `kubeconfig`. You can also harvest the `id-token`.
+
+Take care therefore that your Kubeconfig file is not shared access, this is
+risky handling it. The file should be `chmod -r` for all other than the file
+owner and it should be stored on a local disk, never on any shared filesystem.
+
 #### Kubernetes RBAC
 
-We can prepare RBAC and an OIDC kubeconfig in advance, to avoid a need to give
-any permissioned access granting any user direct access to the CAPI kubeconfig.
+When you have configured
+[Dex](https://docs.gitops.weave.works/docs/guides/setting-up-dex/) and
+[RBAC](https://docs.gitops.weave.works/docs/configuration/recommended-rbac-configuration/)
+according to the [Weave GitOps Docs](https://docs.gitops.weave.works/), the
+users on cluster clients should not be configured for the same groups as Weave
+GitOps.
+
+For the purposes of our clusters, where users are all cluster-admin, we do not
+need to observe this finer point of distinction.
+
+We can prepare RBAC roles and an OIDC-enabled kubeconfig, to avoid a need to
+copy any permissioned access token for the purpose of granting any user direct
+access to the CAPI kubeconfig. (We should not usually need to break the glass!)
+
 The RBAC permissions are handled with Kustomize bases in a management cluster.
 
 ([Here](https://github.com/kingdonb/bootstrap-repo/tree/main/clusters/bases/rbac)
@@ -167,13 +196,13 @@ I found this great tool to help manage multiple kubeconfigs easily, called `kcon
 
 * [particledelay/kconf](https://github.com/particledecay/kconf)
 
-(This one has some stale `certificate-authority-data` and might need refresh.)
+Our kubeconfig has some stale `certificate-authority-data` and needs tuning up.
 
 ISA there will be a way to easily get fresh kubeconfig with all clusters that
 you have access to, based on your OIDC. In the mean time, use `kconf` and your
 text editor to make this kubeconfig your own.
 
-You can find a direct-downloadable copy of this kubeconfig on GitHub here:
+You can find a permalink to this example kubeconfig for `kubelogin` here:
 
 * [example-kube-config](https://github.com/kingdon-ci/example-kubeconfig/blob/main/example-kube-config)
 * [raw: example-kube-config](https://github.com/kingdon-ci/example-kubeconfig/raw/main/example-kube-config)
