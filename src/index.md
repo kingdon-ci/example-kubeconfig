@@ -127,26 +127,47 @@ users:
             name: oidc
 ```
 
-In the kubeconfig above, several details are significant. The name `oidc` is
-significant but the name `kubelogin` is not, and can be changed to whatever you
-want. The `client-id` and `client-secret` are also significant as with the
-`idp-issuer-url`, and each cluster gets a `certificate-authority-data` that
-also must match the cluster.
+In the example kubeconfig above, several details are significant.
 
-We can prepare this kubeconfig in advance, to avoid the need to give any
-permissioned access to any user for direct access to the CAPI kubeconfig.
+* The name `oidc` is significant but the name `kubelogin` is not, and can be changed to
+whatever you want.
 
-(This one has some stale `certificate-authority-data` and might need refresh.)
+* The `client-id` and `client-secret` are also significant as with the
+  `idp-issuer-url`,
+
+* and each cluster gets a `certificate-authority-data` that also must match the
+  cluster's own certificate authority data.
+
+#### GitHub Groups
+
+The `extra-scopes: groups` is also significant, in that GitHub as a baseline
+provides only unstable identifiers: `email` and `username`, and that makes it
+generally unusable for setting up authn for RBAC on a set of individuals.
+
+We can still use it though, since we have adopted groups as our main source of
+authority in the example org; there are basically no surprises as there is no
+individual in our RBAC config, only groups in the format: `kingdon-ci:group`.
+
+#### Kubernetes RBAC
+
+We can prepare RBAC and an OIDC kubeconfig in advance, to avoid a need to give
+any permissioned access granting any user direct access to the CAPI kubeconfig.
+The RBAC permissions are handled with Kustomize bases in a management cluster.
+
+([Here](https://github.com/kingdonb/bootstrap-repo/tree/main/clusters/bases/rbac)
+is the `rbac` Kustomize base module that creates this specific RBAC binding!)
 
 This configuration uses your GitHub OIDC through a Dex issuer that has been set
-up for Weave GitOps Enterprise or Open Source. You can use it to break the
-glass and get direct access to the Kubernetes cluster.
+up for Weave GitOps. You can use it to break the glass and get direct access to
+a Kubernetes cluster, or you may shut direct access and use only Weave GitOps.
 
 ## Kconf
 
 I found this great tool to help manage multiple kubeconfigs easily, called `kconf`:
 
 * [particledelay/kconf](https://github.com/particledecay/kconf)
+
+(This one has some stale `certificate-authority-data` and might need refresh.)
 
 ISA there will be a way to easily get fresh kubeconfig with all clusters that
 you have access to, based on your OIDC. In the mean time, use `kconf` and your
