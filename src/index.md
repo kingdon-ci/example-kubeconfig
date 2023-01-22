@@ -2,7 +2,8 @@
 
 This is a Kubeconfig that you can use if you are in the weave-gitops group.
 
-You may contact KingdonB, the admin of the Kingdon-CI group, if you are not in.
+You may contact KingdonB, the admin of the Kingdon-CI group, if you are not in
+the group.
 
 Weave GitOps adds a developer-friendly layer to any Kubernetes cluster, making
 it easy to deploy and manage apps. We need Kubernetes to take advantage of it.
