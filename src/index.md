@@ -127,4 +127,34 @@ users:
             name: oidc
 ```
 
+In the kubeconfig above, several details are significant. The name `oidc` is
+significant but the name `kubelogin` is not, and can be changed to whatever you
+want. The `client-id` and `client-secret` are also significant as with the
+`idp-issuer-url`, and each cluster gets a `certificate-authority-data` that
+also must match the cluster.
+
+We can prepare this kubeconfig in advance, to avoid the need to give any
+permissioned access to any user for direct access to the CAPI kubeconfig.
+
+(This one has some stale `certificate-authority-data` and might need refresh.)
+
+This configuration uses your GitHub OIDC through a Dex issuer that has been set
+up for Weave GitOps Enterprise or Open Source. You can use it to break the
+glass and get direct access to the Kubernetes cluster.
+
+## Kconf
+
+I found this great tool to help manage multiple kubeconfigs easily, called `kconf`:
+
+* [particledelay/kconf](https://github.com/particledecay/kconf)
+
+ISA there will be a way to easily get fresh kubeconfig with all clusters that
+you have access to, based on your OIDC. In the mean time, use `kconf` and your
+text editor to make this kubeconfig your own.
+
+You can find a direct-downloadable copy of this kubeconfig on GitHub here:
+
+* [example-kube-config](https://github.com/kingdon-ci/example-kubeconfig/blob/main/example-kube-config)
+* [raw: example-kube-config](https://github.com/kingdon-ci/example-kubeconfig/raw/main/example-kube-config)
+
 You can do it! We can do it 😁
