@@ -161,8 +161,9 @@ individual in our RBAC config, only groups in the format: `kingdon-ci:group`.
 The Kubeconfig is set up for what's called in the `kubelogin` documentation as
 [**Standalone Mode**](https://github.com/int128/kubelogin/blob/master/docs/standalone-mode.md).
 
-The tl;dr is: just run `kubelogin` to authorize `kubectl`. An OIDC token valid
-for 24 hours is stored directly in your `$KUBECONFIG` file.
+The tl;dr is: just run `kubelogin` to authorize `kubectl`.
+
+An OIDC token valid for 24 hours is stored directly in your `$KUBECONFIG` file.
 
 When your token expires, you will see an error: `Unauthorized` or similar.
 Just run `kubelogin` again. There is no refresh token with this configuration.
