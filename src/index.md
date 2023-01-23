@@ -164,9 +164,10 @@ The Kubeconfig is set up for what's called in the `kubelogin` documentation as
 The tl;dr is: just run `kubelogin` to authorize `kubectl`.
 
 An OIDC token valid for 24 hours is stored directly in your `$KUBECONFIG` file.
-
 When your token expires, you will see an error: `Unauthorized` or similar.
 Just run `kubelogin` again. There is no refresh token with this configuration.
+
+#### Risks and mitigation
 
 This method avoids using any exec plugin at runtime, as the `id-token` gets
 embedded directly in your `kubeconfig`. You can also harvest the `id-token`
