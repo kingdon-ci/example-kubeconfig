@@ -6,7 +6,7 @@ You may contact KingdonB, the admin of the Kingdon-CI group, if you are not in
 the group.
 
 Weave GitOps adds a developer-friendly layer to any Kubernetes cluster, making
-it easy to deploy and manage apps. We need Kubernetes to take advantage of it.
+easier to deploy and manage apps. We need Kubernetes for Flux and Weave GitOps.
 
 ## Getting Started
 
@@ -133,23 +133,27 @@ In the example kubeconfig above, some of the details are significant.
 * The `auth-provider` string `name: oidc` is significant for kubelogin here;
   `kubelogin` is not, and so the user name can be changed or left as-is.
 
-* The `client-id` and `client-secret` are also significant as with the
-  `idp-issuer-url`, (your own OIDC-based identity need not be mentioned)
+* The `client-id` and `client-secret` are significant as is `idp-issuer-url`
+  however your personal user name/identity need not be named in this file.
 
-* and each cluster gets a `certificate-authority-data` that also must match the
-  cluster's own certificate authority data.
+* Each cluster gets a `certificate-authority-data` that also must match the
+  cluster's Kubernetes API service's own self-signed or cert authority data.
 
 This `certificate-authority-data` would not usually change very often, except
-perhaps for certificate renewals or clusters that are likely to come and go.
+for certificate renewals (?) or for clusters that are likely to come and go.
+
+Since Weave GitOps is a self-service cluster management tool for devs, we will
+absolutely need to cope with clusters coming and going! How exactly to refresh
+the CA data when it has gone stale, is left as an exercise for the reader.
 
 #### GitHub Groups
 
 The `extra-scopes: groups` is also significant, in that GitHub as a baseline
-provides only unstable identifiers: `email` and `username`, and that makes it
-generally unusable for setting up authn for RBAC on a set of individuals.
+provides only unstable identifiers: `email` and `username`, and this makes
+GitHub generally unusable for managing authn for RBAC on a set of individuals.
 
-We can still use it though, since we have adopted groups as our main source of
-authority in the example org; there are basically no surprises as there is no
+We can still use GitHub though, since we have adopted **groups** as our source
+of authority in the example org; there are no surprises for us as there is no
 individual in our RBAC config, only groups in the format: `kingdon-ci:group`.
 
 ### tl;dr: Run `kubelogin`
@@ -157,26 +161,32 @@ individual in our RBAC config, only groups in the format: `kingdon-ci:group`.
 The Kubeconfig is set up for what's called in the `kubelogin` documentation as
 [**Standalone Mode**](https://github.com/int128/kubelogin/blob/master/docs/standalone-mode.md).
 
-The tl;dr is: just run `kubelogin`.
+The tl;dr is: just run `kubelogin` to authorize `kubectl`. An OIDC token valid
+for 24 hours is stored directly in your `$KUBECONFIG` file.
 
-When your access expires, in probably about 24 hours, you will see an error:
-`Unauthorized` or similar from `kubectl`. Just run `kubelogin` again;
+When your token expires, you will see an error: `Unauthorized` or similar.
+Just run `kubelogin` again. There is no refresh token with this configuration.
 
 This method avoids using any exec plugin at runtime, as the `id-token` gets
-embedded directly in your `kubeconfig`. You can also harvest the `id-token`.
+embedded directly in your `kubeconfig`. You can also harvest the `id-token`
+from there, which is a security concern that might warrant further mitigation.
 
 Take care therefore that your Kubeconfig file is not shared access, this is
-risky handling it. The file should be `chmod -r` for all other than the file
+risky handling. The file should be `chmod -r` for all other than the file
 owner and it should be stored on a local disk, never on any shared filesystem.
+
+A different configuration is likely possible with refresh tokens, but this
+author struggled to make `kubelogin` work at all, until he tried the Standalone
+Mode configuration, so that is the one configuration he can recommend here.
 
 #### Kubernetes RBAC
 
 When you have configured
 [Dex](https://docs.gitops.weave.works/docs/guides/setting-up-dex/) and
 [RBAC](https://docs.gitops.weave.works/docs/configuration/recommended-rbac-configuration/)
-according to the [Weave GitOps Docs](https://docs.gitops.weave.works/), the
-users on cluster clients should not be configured for the same groups as Weave
-GitOps.
+according to the [Weave GitOps Docs](https://docs.gitops.weave.works/),
+> the users on cluster clients should not be configured for the same groups as
+> Weave GitOps.
 
 For the purposes of our clusters, where users are all cluster-admin, we do not
 need to observe this finer point of distinction.
