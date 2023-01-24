@@ -28,8 +28,8 @@ jobs:
     # Use Flux to publish mkdocs build output as OCI
     - name: Setup Flux CLI
       uses: fluxcd/flux2/action@main
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
+      # with:
+      #   token: ${{ secrets.GITHUB_TOKEN }}
 
     # Use Cosign to sign and verify site content as OCI
     - name: Install Cosign
