@@ -11,4 +11,4 @@ resources:
 images:
 - name: img.hephy.pro/examples/howto-kubeconfig
   newName: img.hephy.pro/examples/howto-kubeconfig
-  newTag: serve
+  newTag: serve-dev
