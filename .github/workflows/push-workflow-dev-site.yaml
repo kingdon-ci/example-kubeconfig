@@ -1,4 +1,4 @@
-name: Build documentation
+name: Build documentation (dev)
 
 env:
   PIP_CACHE_DIR: .pip # Configure the PIP cache directory
@@ -7,7 +7,7 @@ env:
 
 on:
   push:
-    paths: [ src/**.md, .github/workflows/push-workflow-site.yaml, themes/** ]
+    paths: [ src/**.md, .github/workflows/push-workflow-dev-site.yaml, themes/** ]
     branches: [ dev-branch ]
     # tags: [ "*" ]
 
