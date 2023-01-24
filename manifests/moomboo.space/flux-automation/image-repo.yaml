@@ -6,4 +6,4 @@ metadata:
   namespace: default
 spec:
   image: img.hephy.pro/examples/howto-kubeconfig-dev
-  interval: 1m0s
+  interval: 20s

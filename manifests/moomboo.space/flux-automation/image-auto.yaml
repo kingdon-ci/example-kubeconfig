@@ -13,7 +13,7 @@ spec:
       author:
         email: noreply@github.com
         name: CI Updater
-  interval: 10m0s
+  interval: 20s
   sourceRef:
     kind: GitRepository
     name: example-kubeconfig

@@ -5,7 +5,7 @@ metadata:
   name: example-kubeconfig
   namespace: default
 spec:
-  interval: 1m0s
+  interval: 20s
   ref:
     branch: dev-branch
   secretRef:
