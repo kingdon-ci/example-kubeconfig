@@ -3,4 +3,4 @@ kind: ConfigMap
 metadata:
   name: site-content
 data:
-  content-hash: img.hephy.pro/examples/howto-kubeconfig-dev:dev-branch-1197fbde-1674531764 # {"$imagepolicy": "default:example-kubeconfig"}
+  content-hash: img.hephy.pro/examples/howto-kubeconfig-dev:dev-branch-1197fbde-1674531764 # {"$imagepolicy": "default:example-kubeconfig:tag"}
