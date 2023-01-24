@@ -1,0 +1,9 @@
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta1
+kind: ImageRepository
+metadata:
+  name: howto-kubeconfig-dev
+  namespace: default
+spec:
+  image: img.hephy.pro/examples/howto-kubeconfig-dev
+  interval: 1m0s

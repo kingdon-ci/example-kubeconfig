@@ -3,4 +3,4 @@ kind: ConfigMap
 metadata:
   name: site-content
 data:
-  content-hash: 12abcde0
+  content-hash: 12abcde0 # {"$imagepolicy": "default:example-kubeconfig"}
