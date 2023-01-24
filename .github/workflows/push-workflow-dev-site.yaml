@@ -63,6 +63,14 @@ jobs:
           type=semver,pattern={{version}}
         #,value=v1.0.0
 
+    - name: Generate build ID
+      id: prep
+      run: |
+          branch=${GITHUB_REF##*/}
+          sha=${GITHUB_SHA::8}
+          ts=$(date +%s)
+          echo "::set-output name=BUILD_ID::${branch}-${sha}-${ts}"
+
     - name: Login to Hephy Harbor
       uses: docker/login-action@v2
       with:
@@ -85,7 +93,7 @@ jobs:
         echo "digest=$(grep '✔ artifact successfully pushed to' tmp-digest.out | awk '{print $6}')" >> $GITHUB_OUTPUT
 
         flux tag artifact oci://${{ env.PUSH_TARGET }}:${{ steps.docker_meta.outputs.version }} \
-          --tag testing
+          --tag ${{ steps.prep.outputs.BUILD_ID }}
 
     # Sign the docs tag with cosign (keyless/experimental)
     - name: Cosign (keyless)
