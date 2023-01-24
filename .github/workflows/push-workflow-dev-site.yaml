@@ -69,7 +69,7 @@ jobs:
           branch=${GITHUB_REF##*/}
           sha=${GITHUB_SHA::8}
           ts=$(date +%s)
-          echo "::set-output name=BUILD_ID::${branch}-${sha}-${ts}"
+          echo "BUILD_ID=${branch}-${sha}-${ts}" >> $GITHUB_OUTPUT
 
     - name: Login to Hephy Harbor
       uses: docker/login-action@v2
@@ -82,7 +82,7 @@ jobs:
     - name: Flux push
       id: push_html
       run: |
-        flux push artifact oci://${{ env.PUSH_TARGET }}:development --path=$BUILDDIR \
+        flux push artifact oci://${{ env.PUSH_TARGET }}:${{ steps.docker_meta.outputs.version }} --path=$BUILDDIR \
           --source="$(git config --get remote.origin.url)" \
           --revision="$(git tag --points-at HEAD)/$(git rev-parse HEAD)" 2>&1 | tee tmp-digest.out
           # Warning: This is not stable, flux CLI output may change
@@ -94,6 +94,8 @@ jobs:
 
         flux tag artifact oci://${{ env.PUSH_TARGET }}:${{ steps.docker_meta.outputs.version }} \
           --tag ${{ steps.prep.outputs.BUILD_ID }}
+        flux tag artifact oci://${{ env.PUSH_TARGET }}:${{ steps.docker_meta.outputs.version }} \
+          --tag development
 
     # Sign the docs tag with cosign (keyless/experimental)
     - name: Cosign (keyless)

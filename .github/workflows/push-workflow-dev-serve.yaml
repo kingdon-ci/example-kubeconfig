@@ -41,10 +41,10 @@ jobs:
         docker build -t ${SITE} .
         docker push ${SITE} | tee tmp-digest.out
         cat tmp-digest.out
-        DIGEST="$(grep 'serve: digest: sha256:' tmp-digest.out | awk '{print $3}')"
+        DIGEST="$(grep 'serve-dev: digest: sha256:' tmp-digest.out | awk '{print $3}')"
         echo DIGEST=$DIGEST
 
-        echo "digest=$(grep 'serve: digest: sha256:' tmp-digest.out | awk '{print $3}')" >> $GITHUB_OUTPUT
+        echo "digest=$(grep 'serve-dev: digest: sha256:' tmp-digest.out | awk '{print $3}')" >> $GITHUB_OUTPUT
 
     # Sign the docs tag with cosign (keyless/experimental)
     - name: Cosign (keyless)
