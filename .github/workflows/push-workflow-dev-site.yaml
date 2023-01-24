@@ -2,13 +2,13 @@ name: Build documentation
 
 env:
   PIP_CACHE_DIR: .pip # Configure the PIP cache directory
-  PUSH_TARGET: img.hephy.pro/examples/howto-kubeconfig
+  PUSH_TARGET: img.hephy.pro/examples/howto-kubeconfig-dev
   BUILDDIR: ./site
 
 on:
   push:
     paths: [ src/**.md, .github/workflows/push-workflow-site.yaml, themes/** ]
-    branches: [ main ]
+    branches: [ dev-branch ]
     # tags: [ "*" ]
 
 jobs:
