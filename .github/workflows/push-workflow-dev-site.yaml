@@ -1,4 +1,4 @@
-name: Build documentation (dev)
+name: Build documentation (site-dev)
 
 env:
   PIP_CACHE_DIR: .pip # Configure the PIP cache directory
@@ -28,8 +28,8 @@ jobs:
     # Use Flux to publish mkdocs build output as OCI
     - name: Setup Flux CLI
       uses: fluxcd/flux2/action@main
-      # with:
-      #   token: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
 
     # Use Cosign to sign and verify site content as OCI
     - name: Install Cosign
@@ -82,7 +82,7 @@ jobs:
     - name: Flux push
       id: push_html
       run: |
-        flux push artifact oci://${{ env.PUSH_TARGET }}:${{ steps.docker_meta.outputs.version }} --path=$BUILDDIR \
+        flux push artifact oci://${{ env.PUSH_TARGET }}:development --path=$BUILDDIR \
           --source="$(git config --get remote.origin.url)" \
           --revision="$(git tag --points-at HEAD)/$(git rev-parse HEAD)" 2>&1 | tee tmp-digest.out
           # Warning: This is not stable, flux CLI output may change

@@ -1,0 +1,53 @@
+name: Build docs server (dev)
+
+env:
+  PUSH_TARGET_IMG: img.hephy.pro/examples/howto-kubeconfig-dev
+  PUSH_TARGET_TAG: serve-dev # Configure what tag will push
+
+on:
+  push:
+    paths: [ Dockerfile, _scripts/flux-pull.sh, .github/workflows/push-workflow-dev-serve.yaml ]
+    branches: [ dev-branch ]
+
+jobs:
+  build-push:
+    permissions:
+      id-token: write # needed for signing the images with GitHub OIDC Token **not production ready**
+    name: "Build & Push docs server"
+    runs-on: ubuntu-latest
+
+    steps:
+
+    # Checkout source code
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    # Use Cosign to sign and verify site content as OCI
+    - name: Install Cosign
+      uses: sigstore/cosign-installer@main
+
+    - name: Login to Hephy Harbor
+      uses: docker/login-action@v2
+      with:
+        registry: img.hephy.pro
+        username: ${{ secrets.HARBOR_BOT_PUSH_USER }}
+        password: ${{ secrets.HARBOR_BOT_PASSWORD }}
+
+    # Make server with latest published artifact
+    - name: Docker build and push
+      id: push_rootfs
+      run: |
+        SITE=${PUSH_TARGET_IMG}:${PUSH_TARGET_TAG}
+        docker build -t ${SITE} .
+        docker push ${SITE} | tee tmp-digest.out
+        cat tmp-digest.out
+        DIGEST="$(grep 'serve: digest: sha256:' tmp-digest.out | awk '{print $3}')"
+        echo DIGEST=$DIGEST
+
+        echo "digest=$(grep 'serve: digest: sha256:' tmp-digest.out | awk '{print $3}')" >> $GITHUB_OUTPUT
+
+    # Sign the docs tag with cosign (keyless/experimental)
+    - name: Cosign (keyless)
+      run: cosign sign ${{ env.PUSH_TARGET_IMG }}@${{ steps.push_rootfs.outputs.digest }}
+      env:
+        COSIGN_EXPERIMENTAL: true

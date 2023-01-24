@@ -17,7 +17,7 @@ spec:
     spec:
       initContainers:
       - name: flux-pull
-        image: img.hephy.pro/examples/howto-kubeconfig:serve
+        image: img.hephy.pro/examples/howto-kubeconfig:serve-dev
         imagePullPolicy: Always
         command:
           - "/usr/local/bin/flux-pull.sh"
@@ -33,7 +33,7 @@ spec:
 
       containers:
       - name: nginx
-        image: img.hephy.pro/examples/howto-kubeconfig:serve # build
+        image: img.hephy.pro/examples/howto-kubeconfig:serve-dev # build
         imagePullPolicy: Always
         ports:
         - containerPort: 80

@@ -7,7 +7,7 @@ rm -rf /tmp/oci-pull
 mkdir /tmp/oci-pull
 
 flux pull artifact \
-  oci://img.hephy.pro/examples/howto-kubeconfig:testing \
+  oci://img.hephy.pro/examples/howto-kubeconfig:development \
   --output /tmp/oci-pull && \
   rsync --delete -rlv /tmp/oci-pull/ /usr/share/nginx/html
 
