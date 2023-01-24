@@ -4,6 +4,7 @@ resources:
 - deployment.yaml
 - service.yaml
 - ingress.yaml
+- content-hash.yaml
 images:
 - name: img.hephy.pro/examples/howto-kubeconfig
   newName: img.hephy.pro/examples/howto-kubeconfig
