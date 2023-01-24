@@ -3,4 +3,4 @@ kind: ConfigMap
 metadata:
   name: site-content
 data:
-  content-hash: 1dd0aa29
+  content-hash: 12abcde0
