@@ -10,5 +10,5 @@ resources:
 - flux-kustomization.yaml
 images:
 - name: img.hephy.pro/examples/howto-kubeconfig
-  newName: img.hephy.pro/examples/howto-kubeconfig
+  newName: img.hephy.pro/examples/howto-kubeconfig-dev
   newTag: serve-dev
