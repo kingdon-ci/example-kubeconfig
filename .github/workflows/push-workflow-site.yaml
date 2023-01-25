@@ -1,4 +1,4 @@
-name: Build documentation (tag)
+name: Build documentation (site)
 
 env:
   PIP_CACHE_DIR: .pip # Configure the PIP cache directory
