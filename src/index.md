@@ -10,7 +10,7 @@ easier to deploy and manage apps. We need Kubernetes for Flux and Weave GitOps.
 
 #### Solved in Golang
 
-There is a [super-tl;dr now][solution] if you're up for compiling some Golang.
+There is a [super-tl;dr now][tldr] if you're up for compiling some Golang.
 
 ## Getting Started
 
@@ -274,4 +274,5 @@ kubectl get nodes
 You can also put that in `~/.kube/config` for a more permanent setting.
 
 [solution]: #kubeconfig-ca-fetch
+[tldr]: #code
 [main.go]: https://github.com/kingdon-ci/kubeconfig-ca-fetch/blob/15f7bae619e8fb628c5c4b5d0fd6d1a327aa02b1/cmd/kubeconfig-ca-fetch/main.go#L30-L43
