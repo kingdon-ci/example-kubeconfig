@@ -32,4 +32,5 @@ spec:
   tls:
   - hosts:
     - howto.howard.moomboo.space
+    - howto-dev.howard.moomboo.space
     secretName: example-kubeconfig
