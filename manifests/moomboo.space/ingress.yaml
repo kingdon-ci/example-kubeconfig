@@ -2,6 +2,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: example-kubeconfig
+  namespace: default
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /$2
     cert-manager.io/cluster-issuer: production-letsencrypt

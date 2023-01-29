@@ -2,6 +2,9 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: example-kubeconfig
+  namespace: default
+  annotations:
+    reloader.stakater.com/auto: "true"
 spec:
   selector:
     matchLabels:
@@ -21,6 +24,13 @@ spec:
         volumeMounts:
           - mountPath: /usr/share/nginx/html
             name: html
+        env:
+          - name: CONTENT_HASH
+            valueFrom:
+              configMapKeyRef:
+                name: site-content
+                key: content-hash
+
       containers:
       - name: nginx
         image: img.hephy.pro/examples/howto-kubeconfig:serve # build
