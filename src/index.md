@@ -240,7 +240,8 @@ I built a partial solution to some of the issues described above. This helps
 when the certificate-authority-data has gone stale, though it may be insecure.
 
 Try cloning [this repo](https://github.com/kingdon-ci/kubeconfig-ca-fetch) and
-run `make`.
+run `make`. Just copy the super-tl;dr blob below, (or click the links and read
+what you're doing)
 
 There is a list of clusters in [main.go][] which you may edit. The heavy
 lifting is handled through a package!
@@ -256,9 +257,14 @@ The package `kubeconfigcafetch`:
 Assuming `make` is fine, you'll find the clusters ready in `kube.config`.
 Some clusters will be unreachable by default, unless you have Tailscale.
 
-NB: Do remember to `chmod go-r` as below, an `id-token` will go there!
+NB: Do remember to `chmod go-r` as below, an `id-token` will go in that
+`kube-config` when you `kubelogin`!
+
+##### super-tl;dr
 
 ```bash
+git clone https://github.com/kingdon-ci/kubeconfig-ca-fetch && cd kubeconfig-ca-fetch
+make # (runs make all: tidy && build && kube.config)
 chmod 600 kube.config
 export KUBECONFIG=`pwd`/kube.config
 kubelogin
