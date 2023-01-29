@@ -1,0 +1,22 @@
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta1
+kind: ImageUpdateAutomation
+metadata:
+  name: example-kubeconfig
+  namespace: default
+spec:
+  git:
+    checkout:
+      ref:
+        branch: dev-branch
+    commit:
+      author:
+        email: noreply@github.com
+        name: CI Updater
+  interval: 20s
+  sourceRef:
+    kind: GitRepository
+    name: example-kubeconfig
+  update:
+    path: ./manifests/moomboo.space
+    strategy: Setters

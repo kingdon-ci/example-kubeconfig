@@ -1,10 +1,14 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
+- flux-automation
 - deployment.yaml
 - service.yaml
 - ingress.yaml
+- content-hash.yaml
+- reloader/
+- flux-kustomization.yaml
 images:
 - name: img.hephy.pro/examples/howto-kubeconfig
-  newName: img.hephy.pro/examples/howto-kubeconfig
-  newTag: serve
+  newName: img.hephy.pro/examples/howto-kubeconfig-dev
+  newTag: serve-dev

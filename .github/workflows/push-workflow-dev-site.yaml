@@ -1,14 +1,14 @@
-name: Build documentation (site)
+name: Build documentation (site-dev)
 
 env:
   PIP_CACHE_DIR: .pip # Configure the PIP cache directory
-  PUSH_TARGET: img.hephy.pro/examples/howto-kubeconfig
+  PUSH_TARGET: img.hephy.pro/examples/howto-kubeconfig-dev
   BUILDDIR: ./site
 
 on:
   push:
-    paths: [ src/**.md, .github/workflows/push-workflow-site.yaml, themes/** ]
-    branches: [ main ]
+    paths: [ src/**.md, .github/workflows/push-workflow-dev-site.yaml, themes/** ]
+    branches: [ dev-branch ]
     # tags: [ "*" ]
 
 jobs:
@@ -63,6 +63,14 @@ jobs:
           type=semver,pattern={{version}}
         #,value=v1.0.0
 
+    - name: Generate build ID
+      id: prep
+      run: |
+          branch=${GITHUB_REF##*/}
+          sha=${GITHUB_SHA::8}
+          ts=$(date +%s)
+          echo "BUILD_ID=${branch}-${sha}-${ts}" >> $GITHUB_OUTPUT
+
     - name: Login to Hephy Harbor
       uses: docker/login-action@v2
       with:
@@ -85,7 +93,9 @@ jobs:
         echo "digest=$(grep '✔ artifact successfully pushed to' tmp-digest.out | awk '{print $6}')" >> $GITHUB_OUTPUT
 
         flux tag artifact oci://${{ env.PUSH_TARGET }}:${{ steps.docker_meta.outputs.version }} \
-          --tag testing
+          --tag ${{ steps.prep.outputs.BUILD_ID }}
+        flux tag artifact oci://${{ env.PUSH_TARGET }}:${{ steps.docker_meta.outputs.version }} \
+          --tag development
 
     # Sign the docs tag with cosign (keyless/experimental)
     - name: Cosign (keyless)
