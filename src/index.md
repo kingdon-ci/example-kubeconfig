@@ -198,11 +198,11 @@ The package `kubeconfigcafetch`:
 
 [link](https://github.com/kingdon-ci/kubeconfig-ca-fetch/blob/main/kubeconfig.go)
 
-Assuming `make` is fine, you'll find the clusters ready in `kube.config`.
-Some clusters will be unreachable by default, unless you have Tailscale.
+Assuming `make clean && make all kube.config` is fine, you'll find the clusters ready in `kube.config`.
+Some clusters in the `turkey.local` domain will be unreachable by default, unless you have Tailscale.
 
 NB: Do remember to `chmod go-r` as below, an `id-token` will go in that
-`kube-config` when you `kubelogin`!
+`kube-config` once you ran `kubelogin`!
 
 ##### super-tl;dr
 
