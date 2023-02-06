@@ -9,6 +9,16 @@ metadata:
 spec:
   ingressClassName: public
   rules:
+  - host: howto-dev.howard.moomboo.space
+    http:
+      paths:
+      - path: /()(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: example-kubeconfig
+            port:
+              number: 80
   - host: howto.howard.moomboo.space
     http:
       paths:
@@ -22,4 +32,5 @@ spec:
   tls:
   - hosts:
     - howto.howard.moomboo.space
+    - howto-dev.howard.moomboo.space
     secretName: example-kubeconfig
