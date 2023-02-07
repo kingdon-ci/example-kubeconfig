@@ -263,11 +263,14 @@ out-of-band, (like comparing them against the ones you see on this web site!)
 ### Source
 
 So it is important that we can publish a web site in order to close the loop,
-[here][example] is just exactly how we did that! Surely, now that you can visit
-the web page here and confirm the CA data that was downloaded matches what's on this
-web page, we can strengthen the trust in the found CA data's actual verity.
+[here (kingdon-ci/example-kubeconfig)][example] is just exactly how we did
+that!
 
-Find the GitHub sources for [the current page] at the link above.
+Surely, now that you can visit the web page here and confirm the CA data that
+was downloaded matches what's on this web page, we can strengthen the trust in
+the found CA data's actual verity.
+
+Find the GitHub sources for [the current page][page] at the link above.
 
 [solution]: #kubeconfig-ca-fetch
 [tldr]: #code
