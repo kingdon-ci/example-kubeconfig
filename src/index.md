@@ -249,11 +249,15 @@ If you get this error in a loop when you first try Kubelogin, and you've install
 ```
 
 You may be experiencing [this issue](https://github.com/int128/kubelogin/issues/831) which can be solved
-by avoiding the use of `~/.rd/bin/kubectl` with the `kubelogin` plugin. Rancher Desktop is great, but I
-have no idea why it distributes an apparently broken version of kubectl that doesn't work with `kubelogin`,
-so just don't use that and this problem goes away.
+by avoiding the use of `~/.rd/bin/kubectl` with the `kubelogin` plugin.
+
+Rancher Desktop is great, but I have no idea why it distributes an apparently
+broken version of kubectl that doesn't work with `kubelogin`, so just don't use
+that and this problem goes away.
 
 Remove `~/.rd/bin` from your `PATH` and install `kubectl` from homebrew.
+
+(I use Rancher Desktop without this, and it works perfectly fine for me.)
 
 ##### super-tl;dr
 
