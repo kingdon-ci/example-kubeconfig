@@ -2,14 +2,20 @@
 
 ---
 
-This repo is meant to be the easiest possible website, I ripped off Deis
-branding to make this work as quickly as possible without looking completely 
-horrid; it shouldn't look too horrid.
+This website was easy to make, it's mkdocs, with theme that has basically a
+copy of the O.G. Deis branding, but with our Team Hephy logos applied to it!
 
-The second goal is to have an example kubeconfig
+The example kubeconfig can easily go out of date.
 
-It does not need to generate an example kubeconfig until "Phase 2"
+That's what Phase 2 is for...
 
-So, I will probably embed an example kubeconfig in some backticks in markdown.
+
+#### Phase 2: Kubeconfig-ca-fetch
+
+It is possible to regenerate this Kubeconfig file for yourself, with a bit of
+Go code. Check out this related example: [kingdon-ci/kubeconfig-ca-fetch][]
+
 
 This example is licensed as Apache 2.0
+
+[kingdon-ci/kubeconfig-ca-fetch]: https://github.com/kingdon-ci/kubeconfig-ca-fetch#readme
