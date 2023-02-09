@@ -66,37 +66,37 @@ current-context: howard-space
 users:
   - name: kubelogin
     user:
-        auth-provider:
-            config:
-                client-id: weave-gitops
-                client-secret: AiAImuXKhoI5ApvKWF988txjZ+6rG3S7o6X5En
-                extra-scopes: groups
-                idp-issuer-url: https://dex.howard.moomboo.space
-            name: oidc
+      exec:
+        apiVersion: client.authentication.k8s.io/v1beta1
+        args:
+        - oidc-login
+        - get-token
+        - --oidc-issuer-url=https://dex.howard.moomboo.space
+        - --oidc-client-id=weave-gitops
+        - --oidc-client-secret=AiAImuXKhoI5ApvKWF988txjZ+6rG3S7o6X5En
+        - --oidc-extra-scope=groups
+        - --oidc-extra-scope=offline_access
+        command: kubectl
+        env: null
+        provideClusterInfo: false
 ```
 
 In the example kubeconfig above, some of the details are significant.
 
-* The `auth-provider` string `name: oidc` is significant for kubelogin here;
-  `kubelogin` is not, and so that user name can be changed or left as-is.
-  Every cluster here is sharing a single `id-token` when one gets issued.
+* `oidc-login` is the name of the `kubectl` or `krew` plugin for `kubelogin`.
 
-* The `client-id` and `client-secret` are significant as is `idp-issuer-url`
-  however your personal user name/identity need not be named in this file.
+* The `client-id` and `client-secret` are significant as is `issuer-url`
   You may likely change these values (if you are not the Weave GitOps team.)
 
-* Each cluster gets a `certificate-authority-data` that also must match the
-  cluster's Kubernetes API service's own self-signed or cert authority data.
-  This data is not private (but our clusters are hosted on private networks.)
+#### Refresh Tokens
 
-This `certificate-authority-data` would not usually change very often, except
-at certificate renewal time, or for clusters that are likely to come and go.
+* Requesting the `offline_access` scope
 
-Since Weave GitOps is a self-service cluster management tool for devs, we will
-absolutely need to cope with clusters coming and going! Perhaps all the time.
+This will result in Dex generating a refresh token, which will only be expired
+according to Dex's own [expiration and rotation settings](https://dexidp.io/docs/id-tokens/#expiration-and-rotation-settings).
 
-How exactly to refresh the CA data when it has gone stale, is left as an
-exercise for the reader. (Edit: this has been [solved in Golang][solution].)
+Refresh tokens are usually much longer lived than id tokens, and in fact can
+be configured so that they never expire. Take care with this configuration!
 
 #### GitHub Groups
 
@@ -108,30 +108,45 @@ We can still use GitHub though, since we have adopted **groups** as our source
 of authority in the example org; there are no surprises for us as there is no
 individual in our RBAC config, only groups in the format: `kingdon-ci:group`.
 
+#### Self-Service Cluster Management
+
+* Each cluster gets a `certificate-authority-data` that must authenticate the
+  cluster's Kubernetes API service's own (usually self-signed) cert data.
+
+This `certificate-authority-data` would not usually change very often, except
+at certificate renewal time, or for clusters that are likely to come and go.
+
+Since Weave GitOps is a self-service cluster management tool for devs, we will
+absolutely need to cope with clusters coming and going! Perhaps all the time.
+
+How exactly to refresh the CA data when it has gone stale, is left as an
+exercise for the reader. (Edit: this has been [solved in Golang][solution].)
+
 ### tl;dr: Run `kubelogin`
 
-The Kubeconfig is set up for what's called in the `kubelogin` documentation as
+The Kubeconfig can also be set up for what the `kubelogin` documentation calls
 [**Standalone Mode**](https://github.com/int128/kubelogin/blob/master/docs/standalone-mode.md).
 
-The tl;dr is: just run `kubelogin` to authorize `kubectl`.
+The old tl;dr was based on Standalone Mode: just run `kubelogin` to authorize `kubectl`.
 
-An OIDC token valid for 24 hours is stored directly in your `$KUBECONFIG` file.
-When your token expires, you will see an error: `Unauthorized` or similar.
-Just run `kubelogin` again. There is no refresh token with this configuration.
+With the exec mode configuration above, you don't need to run `kubelogin` anymore.
+But you might try `kubelogin --setup` to learn how to configure this from scratch!
 
 #### Risks and mitigation
 
-This method avoids using any exec plugin at runtime, as the `id-token` gets
-embedded directly in your `kubeconfig`. You can also harvest the `id-token`
-from there, which is a security concern that might warrant further mitigation.
+This method uses the exec plugin at runtime, whereas in standalone mode the
+`id-token` gets embedded directly in your `kubeconfig`; with this method it is
+still stored on disk, as is the refresh token, but you can still freely copy
+the kubeconfig and share it without compromising your identity.
 
-Take care therefore that your Kubeconfig file is not shared access, this is
-risky handling. The file should be `chmod -r` for all other than the file
-owner and it should be stored on a local disk, never on any shared filesystem.
+One can harvest an `id-token` or a `refresh-token`, which is a security concern
+that might warrant further mitigation.
 
-A different configuration is likely possible with refresh tokens, but this
-author struggled to make `kubelogin` work at all, until he tried the Standalone
-Mode configuration, so that is the one configuration he can recommend here.
+Take care that your home directory is not shared access; this is generally
+standard operating procedure. A home directory should be `chmod -rwx` for all
+entities other than the owner.
+
+The id token should be stored on a local disk, never on any shared filesystem.
 
 #### Kubernetes RBAC
 
@@ -222,6 +237,23 @@ NB: Do remember to `chmod go-r` as below, an `id-token` is your identity and it 
 `kubelogin` in standalone mode writes the secret `id-token` directly into `kube.config`. So take care!
 
 Please don't let any bad hackers in (but also, hello friendly neighborhood hackers!)
+
+#### Errors with M1 Mac and Rancher Desktop
+
+If you get this error in a loop when you first try Kubelogin, and you've installed Rancher Desktop:
+
+```
+...transport.go:243] Unable to cancel request for *exec.roundTripper...
+...transport.go:243] Unable to cancel request for *exec.roundTripper...
+...transport.go:243] Unable to cancel request for *exec.roundTripper...
+```
+
+You may be experiencing [this issue](https://github.com/int128/kubelogin/issues/831) which can be solved
+by avoiding the use of `~/.rd/bin/kubectl` with the `kubelogin` plugin. Rancher Desktop is great, but I
+have no idea why it distributes an apparently broken version of kubectl that doesn't work with `kubelogin`,
+so just don't use that and this problem goes away.
+
+Remove `~/.rd/bin` from your `PATH` and install `kubectl` from homebrew.
 
 ##### super-tl;dr
 
