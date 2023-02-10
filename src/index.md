@@ -140,7 +140,9 @@ still stored on disk, as is the refresh token, but you can still freely copy
 the kubeconfig and share it without compromising your identity.
 
 One can harvest an `id-token` or a `refresh-token`, which is a security concern
-that might warrant further mitigation.
+that might warrant further mitigation. But the fact that `id-token` expires quickly
+helps a bit, and Dex has other mitigations that can make `refresh-token` expire as
+soon as it's used, which could make it harder to copy and re-use without detection.
 
 Take care that your home directory is not shared access; this is generally
 standard operating procedure. A home directory should be `chmod -rwx` for all
