@@ -38,7 +38,7 @@ You need `kubelogin` so you can login to Kube. (No duh!)
 
 ## Kubeconfig
 
-The Kubeconfig: 
+The Kubeconfig:
 
 ```yaml
 apiVersion: v1
