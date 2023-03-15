@@ -3,7 +3,7 @@
 This is a Kubeconfig that you can use if you are in the weave-gitops group.
 
 You may contact KingdonB, the admin of the Kingdon-CI group, if you are not in
-the group. Hello CNCF!
+the group. Hello CNCF Livestream!
 
 Weave GitOps adds a developer-friendly layer to any Kubernetes cluster, making
 easier to deploy and manage apps. We need Kubernetes for Flux and Weave GitOps.
