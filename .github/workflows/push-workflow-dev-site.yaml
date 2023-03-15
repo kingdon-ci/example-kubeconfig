@@ -99,6 +99,6 @@ jobs:
 
     # Sign the docs tag with cosign (keyless/experimental)
     - name: Cosign (keyless)
-      run: cosign sign ${{ steps.push_html.outputs.digest }}
+      run: cosign sign -y ${{ steps.push_html.outputs.digest }}
       env:
         COSIGN_EXPERIMENTAL: true
