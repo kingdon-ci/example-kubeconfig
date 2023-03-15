@@ -4,4 +4,4 @@ metadata:
   name: site-content
   namespace: default
 data:
-  content-hash: dev-branch-8fac4e70-1678456787 # {"$imagepolicy": "default:example-kubeconfig:tag"}
+  content-hash: dev-branch-dd62d186-1678888172 # {"$imagepolicy": "default:example-kubeconfig:tag"}
