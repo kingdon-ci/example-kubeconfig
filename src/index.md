@@ -1,12 +1,12 @@
 # Example Kubeconfig for int128/kubelogin
 
-This is a Kubeconfig that you can use if you are in the weave-gitops group.
+This is a Kubeconfig that you can use if you are in the home-workers group.
 
 You may contact KingdonB, the admin of the Kingdon-CI group, if you are not in
 the group. Hello CNCF Livestream!
 
-Weave GitOps adds a developer-friendly layer to any Kubernetes cluster, making
-easier to deploy and manage apps. We need Kubernetes for Flux and Weave GitOps.
+Our Dex config adds GitHub connectivity to any self-managed Kubernetes cluster,
+making possible to connect to Kubernetes. We need Kubernetes for Flux.
 
 #### (Solution in Golang)
 
@@ -78,7 +78,7 @@ In the example kubeconfig above, some of the details are significant.
 * `oidc-login` is the name of the `kubectl` or `krew` plugin for `kubelogin`.
 
 * The `client-id` and `client-secret` are significant as is `issuer-url`
-  You may likely change these values (if you are not the Weave GitOps team.)
+  You may likely change these values (if you are not the Home Workers team.)
 
 #### Refresh Tokens
 
@@ -108,7 +108,7 @@ individual in our RBAC config, only groups in the format: `kingdon-ci:group`.
 This `certificate-authority-data` would not usually change very often, except
 at certificate renewal time, or for clusters that are likely to come and go.
 
-Since Weave GitOps is a self-service cluster management tool for devs, we will
+Since Cluster-API is a self-service cluster management tool for devs, we will
 absolutely need to cope with clusters coming and going! Perhaps all the time.
 
 How exactly to refresh the CA data when it has gone stale, is left as an
@@ -167,8 +167,8 @@ The RBAC permissions are handled with Kustomize bases in a management cluster.
 is the `rbac` Kustomize base module that creates this specific RBAC binding!)
 
 This configuration uses your GitHub OIDC through a Dex issuer that has been set
-up for Weave GitOps. You can use it to break the glass and get direct access to
-a Kubernetes cluster, or you may shut direct access and use only Weave GitOps.
+up according to Weave GitOps docs. You can use it to get direct access to a
+Kubernetes cluster, or you may shut direct access and use only GitOps.
 
 ## Kconf
 
